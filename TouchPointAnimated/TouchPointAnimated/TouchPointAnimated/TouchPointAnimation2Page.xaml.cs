@@ -14,11 +14,7 @@ namespace TouchPointAnimated
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TouchPointAnimation2Page : ContentPage
     {
-        Stopwatch stopwatch = new Stopwatch();
         bool pageIsActive;
-
-        float scale;
-        double cycleTime = 0.8;
         
         List<RipplingTouchPoint> _touchPoints;
         
@@ -74,6 +70,7 @@ namespace TouchPointAnimated
                 }
             }
 
+            // remove ripple once it's disappeared
             _touchPoints.RemoveAll(x => x.StrokeAlpha == 0);
         }
 
@@ -98,25 +95,16 @@ namespace TouchPointAnimated
             CanvasView.InvalidateSurface();
         }
 
-
-        private async void InitAnimation()
+        private void InitAnimation()
         {
             pageIsActive = true;
-            stopwatch.Start();
 
-            while (pageIsActive)
-            {
-                double t = stopwatch.Elapsed.TotalSeconds %
-                                    cycleTime / cycleTime;
-
-                scale  = (1 + (float)Math.Sin(2 * Math.PI * t)) / 2;
-
+            Device.StartTimer(TimeSpan.FromSeconds(1.0 / 30), () => {
+                
                 CanvasView.InvalidateSurface();
 
-                await Task.Delay(TimeSpan.FromSeconds(1.0 / 30));
-            }
-
-            stopwatch.Stop();
+                return pageIsActive;
+            });
         }
     }
 
