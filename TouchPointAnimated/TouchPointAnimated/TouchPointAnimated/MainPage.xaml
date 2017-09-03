@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TouchPointAnimated"
+             Title="Touch Point Animated"
              x:Class="TouchPointAnimated.MainPage">
 
     <StackLayout Padding="10,20,10,10">
@@ -15,7 +16,7 @@
 
         <Button
             x:Name="HeartBeatEffectTouchPointPageButton"
-            BackgroundColor="DodgerBlue"
+            BackgroundColor="OrangeRed"
             Clicked="HeartBeatEffectTouchPointPageButton_Clicked"
             HorizontalOptions="FillAndExpand"
             Text="Heart Beat Effect Touch Point"
@@ -23,7 +24,7 @@
 
         <Button
             x:Name="RippleEffectTouchPointPageButton"
-            BackgroundColor="DodgerBlue"
+            BackgroundColor="OrangeRed"
             Clicked="RippleEffectTouchPointPageButton_Clicked"
             HorizontalOptions="FillAndExpand"
             Text="Ripple Effect Touch Point"

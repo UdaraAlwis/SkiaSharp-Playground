@@ -17,18 +17,16 @@ namespace TouchPointAnimated
         Stopwatch stopwatch = new Stopwatch();
         bool pageIsActive;
 
-        AnimatedTouchPoint _animatedTouchPoint;
+        float scale;
+        double cycleTime = 0.8;
+        
+        List<RipplingTouchPoint> _touchPoints;
         
         public TouchPointAnimation2Page()
         {
             InitializeComponent();
 
-            _animatedTouchPoint = new AnimatedTouchPoint
-            {
-                CycleTime = 0.8,
-                MaxRadius = 30,
-                MinRadius = 10,
-            };
+            _touchPoints = new List<RipplingTouchPoint>();
         }
 
         protected override void OnAppearing()
@@ -57,56 +55,26 @@ namespace TouchPointAnimated
 
             //skCanvas.Translate((float)skCanvasWidth / 2, (float)skCanvasHeight / 2);
 
-            _animatedTouchPoint.AnimatingRadius
-                    = _animatedTouchPoint.MinRadius * _animatedTouchPoint.CalculatedScaleValue
-                                        + _animatedTouchPoint.MaxRadius * (1 - _animatedTouchPoint.CalculatedScaleValue);
-
-            using (SKPaint paintTouchPoint = new SKPaint())
+            foreach (var item in _touchPoints)
             {
-                paintTouchPoint.Style = SKPaintStyle.Fill;
-                paintTouchPoint.Color = SKColors.Red;
-                skCanvas.DrawCircle(
-                    _lastTouchPoint.X,
-                    _lastTouchPoint.Y,
-                    _animatedTouchPoint.AnimatingRadius,
-                    paintTouchPoint);
+                item.AnimatingRadius++;
+
+                item.StrokeAlpha--;
+
+                using (SKPaint paintTouchPoint = new SKPaint())
+                {
+                    paintTouchPoint.Style = SKPaintStyle.Stroke;
+                    paintTouchPoint.StrokeWidth = 10;
+                    paintTouchPoint.Color = SKColors.Red.WithAlpha((byte)item.StrokeAlpha);
+                    skCanvas.DrawCircle(
+                        item.TouchPointLocation.X,
+                        item.TouchPointLocation.Y,
+                        item.AnimatingRadius,
+                        paintTouchPoint);
+                }
             }
 
-            using (SKPaint paintTouchPoint = new SKPaint())
-            {
-                paintTouchPoint.Style = SKPaintStyle.Stroke;
-                paintTouchPoint.Color = SKColors.Red.WithAlpha(150);
-                paintTouchPoint.StrokeWidth = 20;
-                skCanvas.DrawCircle(
-                    _lastTouchPoint.X,
-                    _lastTouchPoint.Y,
-                    _animatedTouchPoint.AnimatingRadius + 10,
-                    paintTouchPoint);
-            }
-
-            using (SKPaint paintTouchPoint = new SKPaint())
-            {
-                paintTouchPoint.Style = SKPaintStyle.Stroke;
-                paintTouchPoint.Color = SKColors.Red.WithAlpha(100);
-                paintTouchPoint.StrokeWidth = 20;
-                skCanvas.DrawCircle(
-                    _lastTouchPoint.X,
-                    _lastTouchPoint.Y,
-                    _animatedTouchPoint.AnimatingRadius + 30,
-                    paintTouchPoint);
-            }
-
-            using (SKPaint paintTouchPoint = new SKPaint())
-            {
-                paintTouchPoint.Style = SKPaintStyle.Stroke;
-                paintTouchPoint.Color = SKColors.Red.WithAlpha(60);
-                paintTouchPoint.StrokeWidth = 20;
-                skCanvas.DrawCircle(
-                    _lastTouchPoint.X,
-                    _lastTouchPoint.Y,
-                    _animatedTouchPoint.AnimatingRadius + 50,
-                    paintTouchPoint);
-            }
+            _touchPoints.RemoveAll(x => x.StrokeAlpha == 0);
         }
 
         private SKPoint _lastTouchPoint = new SKPoint();
@@ -114,20 +82,18 @@ namespace TouchPointAnimated
         {
             if (e.ActionType == SkiaSharp.Views.Forms.SKTouchAction.Pressed)
             {
-                _animatedTouchPoint.MaxRadius = 50;
-                _animatedTouchPoint.MinRadius = 30;
-
                 _lastTouchPoint = e.Location;
                 e.Handled = true;
             }
 
-            if (e.ActionType == SkiaSharp.Views.Forms.SKTouchAction.Released)
-            {
-                _animatedTouchPoint.MaxRadius = 30;
-                _animatedTouchPoint.MinRadius = 10;
-            }
-
             _lastTouchPoint = e.Location;
+
+            _touchPoints.Add(
+                new RipplingTouchPoint
+                {
+                    TouchPointLocation = _lastTouchPoint,
+                }
+            );
 
             CanvasView.InvalidateSurface();
         }
@@ -141,10 +107,9 @@ namespace TouchPointAnimated
             while (pageIsActive)
             {
                 double t = stopwatch.Elapsed.TotalSeconds %
-                                    _animatedTouchPoint.CycleTime / _animatedTouchPoint.CycleTime;
+                                    cycleTime / cycleTime;
 
-                _animatedTouchPoint.CalculatedScaleValue
-                            = (1 + (float)Math.Sin(2 * Math.PI * t)) / 2;
+                scale  = (1 + (float)Math.Sin(2 * Math.PI * t)) / 2;
 
                 CanvasView.InvalidateSurface();
 
@@ -153,7 +118,15 @@ namespace TouchPointAnimated
 
             stopwatch.Stop();
         }
+    }
 
 
+    public class RipplingTouchPoint
+    {
+        public float AnimatingRadius { get; set; } = 1;
+
+        public float StrokeAlpha { get; set; } = 255;
+
+        public SKPoint TouchPointLocation { get; set; }
     }
 }

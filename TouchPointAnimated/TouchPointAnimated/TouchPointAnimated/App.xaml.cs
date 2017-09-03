@@ -13,7 +13,7 @@ namespace TouchPointAnimated
         {
             InitializeComponent();
 
-            MainPage = new TouchPointAnimated.MainPage();
+            MainPage = new NavigationPage(new TouchPointAnimated.MainPage());
         }
 
         protected override void OnStart()
