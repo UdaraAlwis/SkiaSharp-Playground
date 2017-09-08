@@ -38,6 +38,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TouchActionEventArgs.cs" />
+    <Compile Include="TouchActionEventHandler.cs" />
+    <Compile Include="TouchEffect.cs" />
     <Compile Include="TouchActionType.cs" />
     <Compile Include="TouchManipulationInfo.cs" />
     <Compile Include="TouchManipulationBitmap.cs" />

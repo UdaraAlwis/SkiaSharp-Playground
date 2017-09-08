@@ -2,17 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MovingImages"
+             xmlns:tt="clr-namespace:MovingImages"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              x:Class="MovingImages.MainPage">
 
 
     <Grid BackgroundColor="White">
-        <skia:SKCanvasView x:Name="canvasView" Touch="canvasView_Touch" EnableTouchEvents="True"
+        <skia:SKCanvasView x:Name="canvasView" EnableTouchEvents="True"
                            PaintSurface="OnCanvasViewPaintSurface" />
-        <!--<Grid.Effects>
+        <Grid.Effects>
             <tt:TouchEffect Capture="True"
                             TouchAction="OnTouchEffectAction" />
-        </Grid.Effects>-->
+        </Grid.Effects>
     </Grid>
 
 </ContentPage>

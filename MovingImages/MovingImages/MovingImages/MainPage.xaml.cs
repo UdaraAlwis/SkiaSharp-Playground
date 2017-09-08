@@ -49,8 +49,6 @@ namespace MovingImages
             }
         }
 
-        
-
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             SKCanvas canvas = args.Surface.Canvas;
@@ -62,8 +60,56 @@ namespace MovingImages
             }
         }
 
-        private void canvasView_Touch(object sender, SKTouchEventArgs args)
+        void OnTouchEffectAction(object sender, TouchActionEventArgs args)
         {
+            // Convert Xamarin.Forms point to pixels
+            Point pt = args.Location;
+            SKPoint point =
+                new SKPoint((float)(canvasView.CanvasSize.Width * pt.X / canvasView.Width),
+                            (float)(canvasView.CanvasSize.Height * pt.Y / canvasView.Height));
+
+            switch (args.Type)
+            {
+                case TouchActionType.Pressed:
+                    for (int i = bitmapCollection.Count - 1; i >= 0; i--)
+                    {
+                        TouchManipulationBitmap bitmap = bitmapCollection[i];
+
+                        if (bitmap.HitTest(point))
+                        {
+                            // Move bitmap to end of collection
+                            bitmapCollection.Remove(bitmap);
+                            bitmapCollection.Add(bitmap);
+
+                            // Do the touch processing
+                            bitmapDictionary.Add(args.Id, bitmap);
+                            bitmap.ProcessTouchEvent(args.Id, args.Type, point);
+                            canvasView.InvalidateSurface();
+                            break;
+                        }
+                    }
+                    break;
+
+                case TouchActionType.Moved:
+                    if (bitmapDictionary.ContainsKey(args.Id))
+                    {
+                        TouchManipulationBitmap bitmap = bitmapDictionary[args.Id];
+                        bitmap.ProcessTouchEvent(args.Id, args.Type, point);
+                        canvasView.InvalidateSurface();
+                    }
+                    break;
+
+                case TouchActionType.Released:
+                case TouchActionType.Cancelled:
+                    if (bitmapDictionary.ContainsKey(args.Id))
+                    {
+                        TouchManipulationBitmap bitmap = bitmapDictionary[args.Id];
+                        bitmap.ProcessTouchEvent(args.Id, args.Type, point);
+                        bitmapDictionary.Remove(args.Id);
+                        canvasView.InvalidateSurface();
+                    }
+                    break;
+            }
         }
     }
 }
