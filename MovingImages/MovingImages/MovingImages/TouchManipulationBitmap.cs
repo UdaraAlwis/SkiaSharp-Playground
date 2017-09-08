@@ -62,6 +62,10 @@ namespace MovingImages
                         PreviousPoint = location,
                         NewPoint = location
                     });
+                    //var scaleMatrix = SKMatrix.MakeScale(1.5f, 1.5f);
+                    //SKMatrix matrix = Matrix;
+                    //SKMatrix.PostConcat(ref matrix, scaleMatrix);
+                    //Matrix = matrix;
                     break;
 
                 case TouchActionType.Moved:

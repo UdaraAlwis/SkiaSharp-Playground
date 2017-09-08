@@ -1,18 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:MovingImages"
-             xmlns:tt="clr-namespace:MovingImages"
-             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-             x:Class="MovingImages.MainPage">
+<ContentPage
+    x:Class="MovingImages.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MovingImages"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+    xmlns:tt="clr-namespace:MovingImages">
 
 
     <Grid BackgroundColor="White">
-        <skia:SKCanvasView x:Name="canvasView" EnableTouchEvents="True"
-                           PaintSurface="OnCanvasViewPaintSurface" />
+        <skia:SKCanvasView
+            x:Name="canvasView"
+            EnableTouchEvents="True"
+            PaintSurface="OnCanvasViewPaintSurface" />
         <Grid.Effects>
-            <tt:TouchEffect Capture="True"
-                            TouchAction="OnTouchEffectAction" />
+            <tt:TouchEffect Capture="True" TouchAction="OnTouchEffectAction" />
         </Grid.Effects>
     </Grid>
 
