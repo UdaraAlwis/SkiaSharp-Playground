@@ -24,6 +24,10 @@ namespace TouchAndImages
         {
             InitializeComponent();
 
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                NavigationPage.SetHasNavigationBar(this, false);
+            }
 
             // Load in all the available bitmaps
             Assembly assembly = GetType().GetTypeInfo().Assembly;
